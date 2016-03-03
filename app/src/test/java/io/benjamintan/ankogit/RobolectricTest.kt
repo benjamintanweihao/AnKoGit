@@ -1,10 +1,10 @@
 package io.benjamintan.ankogit
 
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricGradleTestRunner
 import org.robolectric.annotation.Config
-import org.junit.Assert.*
 
 
 @RunWith(RobolectricGradleTestRunner::class)
