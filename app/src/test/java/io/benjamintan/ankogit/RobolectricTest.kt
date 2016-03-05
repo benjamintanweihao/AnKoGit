@@ -9,10 +9,5 @@ import org.robolectric.annotation.Config
 
 @RunWith(RobolectricGradleTestRunner::class)
 @Config(constants = BuildConfig::class, sdk = intArrayOf(21))
-class RobolectricTest {
-
-    @Test
-    fun test_itShouldDoSomething() {
-        assertEquals(4, 2 + 2);
-    }
+open class RobolectricTest {
 }
