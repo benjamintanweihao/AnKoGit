@@ -5,9 +5,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ServiceGenerator {
 
-    val baseUrl = "https://api.github.com"
+    val url = "https://api.github.com"
 
-    fun <T> create(serviceClass: Class<T>): T {
+    fun <T> create(serviceClass: Class<T>, baseUrl: String = url): T {
         val retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -15,5 +15,5 @@ object ServiceGenerator {
 
         return retrofit.create(serviceClass)
     }
-}
 
+}

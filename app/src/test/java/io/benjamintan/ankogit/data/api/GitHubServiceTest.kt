@@ -1,17 +1,35 @@
 package io.benjamintan.ankogit.data.api
 
+import io.benjamintan.ankogit.APIServiceTestHelper
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import org.junit.Before
 import org.junit.Test
+
+import org.mockito.Matchers.*
 
 class GitHubServiceTest {
 
+    val server = MockWebServer()
+
+    @Before
+    fun setup() {
+        server.start()
+    }
+
     @Test
     fun test_list_repos() {
-        val service = ServiceGenerator.create(GitHubService::class.java)
-        val response = service.listRepos("benjamintanweihao").execute()
+        val fileName = "list_repos"
+        val responseCode = 200
 
-        for (r in response.body()) {
-            println(r)
-        }
+        server.enqueue(MockResponse()
+                .setResponseCode(responseCode)
+                .setBody(APIServiceTestHelper.body(fileName, responseCode)))
+
+        val service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
+        val response = service.listRepos(anyString()).execute()
+        println(response.body())
     }
+
 }
 
