@@ -5,11 +5,10 @@ import io.benjamintan.ankogit.APIServiceTestHelper
 import io.benjamintan.ankogit.RobolectricTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.Before
+import org.json.JSONObject
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExternalResource
-import org.junit.rules.TestName
 
 import org.mockito.Matchers.*
 
@@ -111,6 +110,33 @@ class GitHubServiceTest : RobolectricTest() {
                 .setBody(APIServiceTestHelper.body("GET", "users_user_repo", responseCode)))
         val response = service.userRepos(anyString()).execute()
         println(response.body())
+    }
+
+    @Test
+    fun test_POST_authorizations_201() {
+        val responseCode = 201
+
+        server.enqueue(MockResponse()
+                .setResponseCode(responseCode)
+                .setBody(APIServiceTestHelper.body("POST", "authorizations", responseCode)))
+
+        val json = JSONObject()
+        json.put("note", "a note")
+
+        val response = service.authorizations(json).execute()
+        println(response.body())
+    }
+
+    @Test
+    fun test_POST_authorizations_422() {
+        val responseCode = 422
+
+        server.enqueue(MockResponse()
+                .setResponseCode(responseCode)
+                .setBody(APIServiceTestHelper.body("POST", "authorizations", responseCode)))
+
+        val response = service.authorizations(JSONObject()).execute()
+        println(response.body()?.token)
     }
 }
 

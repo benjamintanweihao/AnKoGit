@@ -1,9 +1,8 @@
 package io.benjamintan.ankogit.data.api
 
+import org.json.JSONObject
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface GitHubService {
     @GET("users/{user}/repos")
@@ -15,5 +14,9 @@ interface GitHubService {
     @GET("user")
     fun login(@Header("Authorization") authorization: String,
               @Header("X-GitHub-OTP") otp: String): Call<User>
+
+    @POST("authorizations")
+    fun authorizations(@Body note: JSONObject) : Call<Authorization>
+
 }
 

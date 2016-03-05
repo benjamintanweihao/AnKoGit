@@ -1,0 +1,20 @@
+{
+  "id": 28947410,
+  "url": "https://api.github.com/authorizations/28947410",
+  "app": {
+    "name": "lol",
+    "url": "https://developer.github.com/v3/oauth_authorizations/",
+    "client_id": "00000000000000000000"
+  },
+  "token": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "hashed_token": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+  "token_last_eight": "zzzzzzzz",
+  "note": "lol",
+  "note_url": null,
+  "created_at": "2016-03-05T04:49:16Z",
+  "updated_at": "2016-03-05T04:49:16Z",
+  "scopes": [
+    "public_repo"
+  ],
+  "fingerprint": null
+}
