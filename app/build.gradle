@@ -43,7 +43,6 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-
     compile 'io.reactivex:rxjava:1.1.1'
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
@@ -51,6 +50,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'com.squareup.okhttp3:mockwebserver:3.0.1'
+    testCompile 'org.mockito:mockito-core:2.0.43-beta'
+
 }
 
 buildscript {
