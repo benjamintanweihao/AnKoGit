@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 23
@@ -7,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "io.benjamintan.ankogit"
-        minSdkVersion 18
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -35,9 +36,7 @@ dependencies {
     compile 'com.android.support:design:23.2.0'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'org.jetbrains.anko:anko-sdk15:0.8'
-    compile 'org.jetbrains.anko:anko-support-v4:0.8'
-    compile 'org.jetbrains.anko:anko-appcompat-v7:0.8'
+    compile "org.jetbrains.anko:anko-common:$anko_version"
 
     compile 'com.google.dagger:dagger:2.0.2'
     kapt 'com.google.dagger:dagger-compiler:2.0.2'
@@ -51,11 +50,12 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'com.squareup.okhttp3:mockwebserver:3.0.1'
     testCompile 'org.mockito:mockito-core:2.0.43-beta'
-
 }
 
 buildscript {
     ext.kotlin_version = '1.0.0'
+    ext.anko_version = '0.8.2'
+
     repositories {
         mavenCentral()
     }
