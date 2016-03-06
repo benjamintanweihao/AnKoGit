@@ -20,6 +20,9 @@ class LoginActivity : AppCompatActivity() {
 
         val login = find<EditText>(R.id.login)
         val password = find<EditText>(R.id.password)
+        val loginNotBlankObs = notBlankObservable(login)
+        val passwordNotBlankObs = notBlankObservable(password)
+
         val signInBtn = find<Button>(R.id.sign_in_btn).apply {
             isEnabled = false
             setOnClickListener {
@@ -27,11 +30,8 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        val loginNotBlank = notBlankObservable(login)
-        val passwordNotBlank = notBlankObservable(password)
-
         Observable
-                .combineLatest(loginNotBlank, passwordNotBlank, { l, p -> l && p })
+                .combineLatest(loginNotBlankObs, passwordNotBlankObs, { l, p -> l && p })
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith {
@@ -41,15 +41,15 @@ class LoginActivity : AppCompatActivity() {
                 }
     }
 
+    private fun doSignIn(login: String, password: String) {
+        toast("$login:$password")
+    }
+
     private fun notBlankObservable(login: EditText): Observable<Boolean>? {
         val loginNotBlank: Observable<Boolean>? = RxTextView
                 .textChangeEvents(login)
                 .map { it.text().isNotBlank() }
         return loginNotBlank
-    }
-
-    private fun doSignIn(login: String, password: String) {
-        toast("$login:$password")
     }
 }
 

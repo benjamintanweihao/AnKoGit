@@ -28,7 +28,7 @@ class GitHubServiceTest : RobolectricTest() {
 
         val username = "username"
         val password = "password"
-        val credentials = "${username}:${password}"
+        val credentials = "$username:$password"
         val basic = "Basic ${Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP)}"
 
         server.enqueue(MockResponse()
