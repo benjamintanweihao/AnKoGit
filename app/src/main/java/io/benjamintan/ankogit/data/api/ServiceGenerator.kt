@@ -1,6 +1,7 @@
 package io.benjamintan.ankogit.data.api
 
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ServiceGenerator {
@@ -11,6 +12,7 @@ object ServiceGenerator {
         val retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build()
 
         return retrofit.create(serviceClass)

@@ -25,8 +25,6 @@ import org.robolectric.shadows.ShadowActivity
 class LoginActivityTest : RobolectricTest() {
 
     val server = MockWebServer()
-    var service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
-
     val isEnabled = Matcher(View::isEnabled)
 
     @Test
@@ -53,15 +51,39 @@ class LoginActivityTest : RobolectricTest() {
                 .setResponseCode(200)
                 .setBody(APIServiceTestHelper.body("GET", "user", 200)))
 
-        val activity = Robolectric.setupActivity(LoginActivity::class.java)
+        val activity = Robolectric.setupActivity(LoginActivity::class.java).apply {
+            service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
+        }
+
+        val shadowActivity = ShadowExtractor.extract(activity) as ShadowActivity
 
         activity.find<EditText>(R.id.login).apply { setText("username") }
         activity.find<EditText>(R.id.password).apply { setText("password") }
         activity.find<Button>(R.id.sign_in_btn).apply { performClick() }
 
+        val expectedIntent = Intent(activity, MainActivity::class.java)
+        val actualIntent = shadowActivity.nextStartedActivity
+        assert(expectedIntent.filterEquals(actualIntent))
+    }
+
+    @Test
+    fun sign_in_unsuccessful_needs_otp() {
+        server.enqueue(MockResponse()
+                .setResponseCode(401)
+                .setBody(APIServiceTestHelper.body("GET", "user", 401)))
+
+        val activity = Robolectric.setupActivity(LoginActivity::class.java).apply {
+            // TODO: Can replace this with injected version once we've wired Dagger up
+            service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
+        }
+
         val shadowActivity = ShadowExtractor.extract(activity) as ShadowActivity
 
-        val expectedIntent = Intent(activity, MainActivity::class.java)
+        activity.find<EditText>(R.id.login).apply { setText("username") }
+        activity.find<EditText>(R.id.password).apply { setText("password") }
+        activity.find<Button>(R.id.sign_in_btn).apply { performClick() }
+
+        val expectedIntent = Intent(activity, OTPActivity::class.java)
         val actualIntent = shadowActivity.nextStartedActivity
 
         assert(expectedIntent.filterEquals(actualIntent))
