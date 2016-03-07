@@ -11,6 +11,7 @@ import org.junit.Test
 import org.junit.rules.ExternalResource
 
 import org.mockito.Matchers.*
+import rx.lang.kotlin.subscribeWith
 
 class GitHubServiceTest : RobolectricTest() {
 
@@ -35,10 +36,11 @@ class GitHubServiceTest : RobolectricTest() {
                 .setResponseCode(responseCode)
                 .setBody(APIServiceTestHelper.body("GET", "user", responseCode)))
 
-        val response = service.login(basic).execute()
-
-        println(response.message())
-        println(response.body())
+        service.login(basic)
+                .subscribeWith {
+                    onNext { println("onNext: $it") }
+                    onError { println("onError: $it") }
+                }
     }
 
     @Test
@@ -54,10 +56,11 @@ class GitHubServiceTest : RobolectricTest() {
                 .setResponseCode(responseCode)
                 .setBody(APIServiceTestHelper.body("GET", "user", responseCode)))
 
-        val response = service.login(basic).execute()
-
-        println(response.code())
-        println(response.message())
+        service.login(basic)
+                .subscribeWith {
+                    onNext { println("onNext: $it") }
+                    onError { println("onError: $it") }
+                }
     }
 
     @Test
@@ -74,11 +77,11 @@ class GitHubServiceTest : RobolectricTest() {
                 .setHeader("X-GitHub-OTP", "required; :2fa-type")
                 .setBody(APIServiceTestHelper.body("GET", "user", responseCode)))
 
-        val response = service.login(basic).execute()
-
-        println(response.headers())
-        println(response.code())
-        println(response.message())
+        service.login(basic)
+                .subscribeWith {
+                    onNext { println("onNext: $it") }
+                    onError { println("onError: $it") }
+                }
     }
 
     @Test
@@ -95,10 +98,11 @@ class GitHubServiceTest : RobolectricTest() {
                 .setResponseCode(responseCode)
                 .setBody(APIServiceTestHelper.body("GET", "user", responseCode)))
 
-        val response = service.login(basic, otp).execute()
-
-        println(response.message())
-        println(response.body())
+        service.login(basic, otp)
+                .subscribeWith {
+                    onNext { println(it) }
+                    onError { println(it.message) }
+                }
     }
 
     @Test
@@ -108,8 +112,12 @@ class GitHubServiceTest : RobolectricTest() {
         server.enqueue(MockResponse()
                 .setResponseCode(responseCode)
                 .setBody(APIServiceTestHelper.body("GET", "users_user_repo", responseCode)))
-        val response = service.userRepos(anyString()).execute()
-        println(response.body())
+
+        service.userRepos(anyString())
+                .subscribeWith {
+                    onNext { println(it) }
+                    onError { println(it.message) }
+                }
     }
 
     @Test
@@ -123,8 +131,11 @@ class GitHubServiceTest : RobolectricTest() {
         val json = JSONObject()
         json.put("note", "a note")
 
-        val response = service.authorizations(json).execute()
-        println(response.body())
+        service.authorizations(json)
+                .subscribeWith {
+                    onNext { println(it) }
+                    onError { println(it.message) }
+                }
     }
 
     @Test
@@ -135,8 +146,11 @@ class GitHubServiceTest : RobolectricTest() {
                 .setResponseCode(responseCode)
                 .setBody(APIServiceTestHelper.body("POST", "authorizations", responseCode)))
 
-        val response = service.authorizations(JSONObject()).execute()
-        println(response.body()?.token)
+        service.authorizations(JSONObject())
+                .subscribeWith {
+                    onNext { println(it) }
+                    onError { println(it.message) }
+                }
     }
 }
 

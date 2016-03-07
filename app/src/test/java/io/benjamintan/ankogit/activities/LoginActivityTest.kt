@@ -25,7 +25,6 @@ import org.robolectric.shadows.ShadowActivity
 class LoginActivityTest : RobolectricTest() {
 
     val server = MockWebServer()
-
     val isEnabled = Matcher(View::isEnabled)
 
     @Test
@@ -53,16 +52,40 @@ class LoginActivityTest : RobolectricTest() {
                 .setBody(APIServiceTestHelper.body("GET", "user", 200)))
 
         val activity = Robolectric.setupActivity(LoginActivity::class.java).apply {
-            service = ServiceGenerator.create(GitHubService::class.java, server.url("/").toString())
+            service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
         }
+
+        val shadowActivity = ShadowExtractor.extract(activity) as ShadowActivity
 
         activity.find<EditText>(R.id.login).apply { setText("username") }
         activity.find<EditText>(R.id.password).apply { setText("password") }
         activity.find<Button>(R.id.sign_in_btn).apply { performClick() }
 
+        val expectedIntent = Intent(activity, MainActivity::class.java)
+        val actualIntent = shadowActivity.nextStartedActivity
+        assert(expectedIntent.filterEquals(actualIntent))
+    }
+
+    @Test
+    fun sign_in_unsuccessful_needs_otp() {
+        val responseCode = 401
+
+        server.enqueue(MockResponse()
+                .setResponseCode(responseCode)
+                .setHeader("X-GitHub-OTP", "required; :2fa-type")
+                .setBody(APIServiceTestHelper.body("GET", "user", responseCode)))
+
+        val activity = Robolectric.setupActivity(LoginActivity::class.java).apply {
+            service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
+        }
+
         val shadowActivity = ShadowExtractor.extract(activity) as ShadowActivity
 
-        val expectedIntent = Intent(activity, MainActivity::class.java)
+        activity.find<EditText>(R.id.login).apply { setText("username") }
+        activity.find<EditText>(R.id.password).apply { setText("password") }
+        activity.find<Button>(R.id.sign_in_btn).apply { performClick() }
+
+        val expectedIntent = Intent(activity, OTPActivity::class.java)
         val actualIntent = shadowActivity.nextStartedActivity
 
         assert(expectedIntent.filterEquals(actualIntent))

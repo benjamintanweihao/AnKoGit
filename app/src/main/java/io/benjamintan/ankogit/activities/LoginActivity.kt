@@ -1,20 +1,22 @@
 package io.benjamintan.ankogit.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Base64
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import com.jakewharton.rxbinding.widget.RxTextView
 import io.benjamintan.ankogit.R
 import io.benjamintan.ankogit.data.api.GitHubService
 import io.benjamintan.ankogit.data.api.ServiceGenerator
+import org.jetbrains.anko.async
 import org.jetbrains.anko.find
+import org.jetbrains.anko.startActivity
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.subscribeWith
-import org.jetbrains.anko.*
-import android.util.Base64
+import rx.schedulers.Schedulers
 
 class LoginActivity : AppCompatActivity() {
 
@@ -53,10 +55,16 @@ class LoginActivity : AppCompatActivity() {
         val authStr = "$login:$password"
         val encodedAuthStr = "Basic ${Base64.encodeToString(authStr.toByteArray(), Base64.NO_WRAP)}"
 
-        val response = service.login(encodedAuthStr).execute()
-        if (response.isSuccess) {
-            startActivity<MainActivity>()
-        }
+        service.login(encodedAuthStr)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribeWith {
+                    onNext {
+                        startActivity<MainActivity>()
+                    }
+                    onError {
+                        startActivity<OTPActivity>()
+                    }
+                }
     }
 
     private fun notBlankObservable(login: EditText): Observable<Boolean>? {
