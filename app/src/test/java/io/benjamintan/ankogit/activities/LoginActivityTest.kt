@@ -25,7 +25,6 @@ import org.robolectric.shadows.ShadowActivity
 class LoginActivityTest : RobolectricTest() {
 
     val server = MockWebServer()
-    var service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
 
     val isEnabled = Matcher(View::isEnabled)
 
@@ -53,7 +52,9 @@ class LoginActivityTest : RobolectricTest() {
                 .setResponseCode(200)
                 .setBody(APIServiceTestHelper.body("GET", "user", 200)))
 
-        val activity = Robolectric.setupActivity(LoginActivity::class.java)
+        val activity = Robolectric.setupActivity(LoginActivity::class.java).apply {
+            service = ServiceGenerator.create(GitHubService::class.java, server.url("/").toString())
+        }
 
         activity.find<EditText>(R.id.login).apply { setText("username") }
         activity.find<EditText>(R.id.password).apply { setText("password") }
