@@ -64,7 +64,8 @@ class LoginActivity : AppCompatActivity() {
         val encodedAuthStr = "Basic ${Base64.encodeToString(authStr.toByteArray(), Base64.NO_WRAP)}"
 
         service.login(encodedAuthStr)
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(schedulerIO)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith {
                     onNext {
                         startActivity<MainActivity>()

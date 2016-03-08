@@ -21,6 +21,7 @@ import org.robolectric.Robolectric
 import org.robolectric.Shadows.*
 import org.robolectric.internal.ShadowExtractor
 import org.robolectric.shadows.ShadowActivity
+import rx.schedulers.Schedulers
 
 class LoginActivityTest : RobolectricTest() {
 
@@ -53,6 +54,7 @@ class LoginActivityTest : RobolectricTest() {
 
         val activity = Robolectric.setupActivity(LoginActivity::class.java).apply {
             service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
+            schedulerIO = Schedulers.immediate()
         }
 
         val shadowActivity = ShadowExtractor.extract(activity) as ShadowActivity
@@ -77,6 +79,7 @@ class LoginActivityTest : RobolectricTest() {
 
         val activity = Robolectric.setupActivity(LoginActivity::class.java).apply {
             service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
+            schedulerIO = Schedulers.immediate()
         }
 
         val shadowActivity = ShadowExtractor.extract(activity) as ShadowActivity
