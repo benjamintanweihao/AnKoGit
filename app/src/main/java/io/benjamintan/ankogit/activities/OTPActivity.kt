@@ -2,7 +2,6 @@ package io.benjamintan.ankogit.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import io.benjamintan.ankogit.R
@@ -22,15 +21,16 @@ class OTPActivity : AppCompatActivity() {
         service = ServiceGenerator.create(GitHubService::class.java)
 
         val otp = find<EditText>(R.id.otp)
-        val signInBtn = find<Button>(R.id.sign_in_btn)
-
-        signInBtn.setOnClickListener {
-            service
-                    .login("basic auth string", otp.text.toString())
-                    .subscribeWith {
-                        onNext { startActivity<MainActivity>() }
-                        onError { toast(it.message.toString()) }
-                    }
+        val signInBtn = find<Button>(R.id.sign_in_btn).apply {
+            setOnClickListener {
+                service
+                        .login("basic auth string", otp.text.toString())
+                        .subscribeWith {
+                            onNext { startActivity<MainActivity>() }
+                            onError { toast(it.message.toString()) }
+                        }
+            }
         }
+
     }
 }

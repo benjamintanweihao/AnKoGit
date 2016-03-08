@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
                         startActivity<MainActivity>()
                     }
                     onError {
-                        startActivity<OTPActivity>()
+                        startActivity<OTPActivity>("authString" to authStr)
                     }
                 }
     }

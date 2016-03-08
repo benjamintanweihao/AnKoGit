@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import com.natpryce.hamkrest.Matcher
 import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
 import io.benjamintan.ankogit.APIServiceTestHelper
 import io.benjamintan.ankogit.R
 import io.benjamintan.ankogit.RobolectricTest
@@ -88,10 +89,9 @@ class LoginActivityTest : RobolectricTest() {
         activity.find<EditText>(R.id.password).apply { setText("password") }
         activity.find<Button>(R.id.sign_in_btn).apply { performClick() }
 
-        val expectedIntent = Intent(activity, OTPActivity::class.java)
         val actualIntent = shadowActivity.nextStartedActivity
-
-        assert(expectedIntent.filterEquals(actualIntent))
+        assertThat(actualIntent.component.className, equalTo(OTPActivity::class.qualifiedName));
+        assert(actualIntent.hasExtra("authString"))
     }
 }
 
