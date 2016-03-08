@@ -16,14 +16,12 @@ import rx.Observable
 import rx.Scheduler
 import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.subscribeWith
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Named
 
 class LoginActivity : AppCompatActivity() {
 
-    @Inject
-    @Named("io")
+    @field:[Inject Named("io")]
     lateinit var schedulerIO: Scheduler
 
     lateinit var service: GitHubService
@@ -32,7 +30,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        (application as App).component(this).inject(this);
+        (application as App).component(this).inject(this)
 
         service = ServiceGenerator.create(GitHubService::class.java)
 
