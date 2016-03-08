@@ -3,28 +3,36 @@ package io.benjamintan.ankogit.activities
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Base64
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import com.jakewharton.rxbinding.widget.RxTextView
+import io.benjamintan.ankogit.App
 import io.benjamintan.ankogit.R
 import io.benjamintan.ankogit.data.api.GitHubService
 import io.benjamintan.ankogit.data.api.ServiceGenerator
-import org.jetbrains.anko.async
 import org.jetbrains.anko.find
 import org.jetbrains.anko.startActivity
 import rx.Observable
+import rx.Scheduler
 import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.subscribeWith
 import rx.schedulers.Schedulers
+import javax.inject.Inject
+import javax.inject.Named
 
 class LoginActivity : AppCompatActivity() {
+
+    @Inject
+    @Named("io")
+    lateinit var schedulerIO: Scheduler
 
     lateinit var service: GitHubService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        (application as App).component(this).inject(this);
 
         service = ServiceGenerator.create(GitHubService::class.java)
 

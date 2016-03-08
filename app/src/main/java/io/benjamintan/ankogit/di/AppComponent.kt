@@ -1,0 +1,16 @@
+package io.benjamintan.ankogit.di
+
+import dagger.Component
+import io.benjamintan.ankogit.App
+import io.benjamintan.ankogit.activities.LoginActivity
+import javax.inject.Singleton
+
+@Component(
+        modules = arrayOf(AppModule::class)
+)
+@Singleton
+interface AppComponent {
+    fun inject(application: App)
+
+    fun inject(activity: LoginActivity)
+}
