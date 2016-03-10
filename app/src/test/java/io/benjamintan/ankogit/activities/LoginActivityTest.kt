@@ -85,13 +85,19 @@ class LoginActivityTest : RobolectricTest() {
 
         val shadowActivity = ShadowExtractor.extract(activity) as ShadowActivity
 
-        activity.find<EditText>(R.id.login).apply { setText("username") }
-        activity.find<EditText>(R.id.password).apply { setText("password") }
+        val login = "username"
+        val password = "password"
+        val authStr = "$login:$password"
+        val encodedAuthStr = "Basic ${Base64.encodeToString(authStr.toByteArray(), Base64.NO_WRAP)}"
+
+        activity.find<EditText>(R.id.login).apply { setText(login) }
+        activity.find<EditText>(R.id.password).apply { setText(password) }
         activity.find<Button>(R.id.sign_in_btn).apply { performClick() }
 
         val actualIntent = shadowActivity.nextStartedActivity
         assertThat(actualIntent.component.className, equalTo(OTPActivity::class.qualifiedName));
         assert(actualIntent.hasExtra("authString"))
+        assertThat(actualIntent.extras.getString("authString"), equalTo(encodedAuthStr))
     }
 }
 

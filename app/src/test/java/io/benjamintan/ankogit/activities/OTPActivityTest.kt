@@ -19,6 +19,7 @@ import org.junit.Test
 import org.robolectric.Robolectric
 import org.robolectric.internal.ShadowExtractor
 import org.robolectric.shadows.ShadowActivity
+import rx.schedulers.Schedulers
 
 class OTPActivityTest : RobolectricTest() {
 
@@ -52,6 +53,7 @@ class OTPActivityTest : RobolectricTest() {
         val intent = Intent().apply { putExtra("authString", "Basic: xxx") }
         val activity = Robolectric.buildActivity(OTPActivity::class.java).withIntent(intent).create().get().apply {
             service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
+            schedulerIO = Schedulers.immediate()
         }
 
         val shadowActivity = ShadowExtractor.extract(activity) as ShadowActivity
@@ -71,6 +73,7 @@ class OTPActivityTest : RobolectricTest() {
         val intent = Intent().apply { putExtra("authString", basicAuth) }
         val activity = Robolectric.buildActivity(OTPActivity::class.java).withIntent(intent).create().get().apply {
             service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
+            schedulerIO = Schedulers.immediate()
         }
 
         activity.find<EditText>(R.id.otp).apply { setText(otp) }

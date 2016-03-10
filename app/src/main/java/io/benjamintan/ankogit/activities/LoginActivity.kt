@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
                         startActivity<MainActivity>()
                     }
                     onError {
-                        startActivity<OTPActivity>("authString" to authStr)
+                        startActivity<OTPActivity>("authString" to encodedAuthStr)
                     }
                 }
     }
