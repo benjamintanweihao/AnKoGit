@@ -19,12 +19,13 @@ class OTPActivity : AppCompatActivity() {
         setContentView(R.layout.activity_otp)
 
         service = ServiceGenerator.create(GitHubService::class.java)
+        val basicAuthString: String = intent.extras.getString("authString", "noAuthStringKey")
 
         val otp = find<EditText>(R.id.otp)
-        val signInBtn = find<Button>(R.id.sign_in_btn).apply {
+        find<Button>(R.id.sign_in_btn).apply {
             setOnClickListener {
                 service
-                        .login("basic auth string", otp.text.toString())
+                        .login(basicAuthString, otp.text.toString())
                         .subscribeWith {
                             onNext { startActivity<MainActivity>() }
                             onError { toast(it.message.toString()) }
