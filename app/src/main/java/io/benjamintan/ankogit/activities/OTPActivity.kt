@@ -7,7 +7,9 @@ import android.widget.EditText
 import io.benjamintan.ankogit.R
 import io.benjamintan.ankogit.data.api.GitHubService
 import io.benjamintan.ankogit.data.api.ServiceGenerator
+import io.benjamintan.ankogit.utils.createNotBlankObservable
 import org.jetbrains.anko.*
+import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.subscribeWith
 
 class OTPActivity : AppCompatActivity() {
@@ -21,8 +23,19 @@ class OTPActivity : AppCompatActivity() {
         service = ServiceGenerator.create(GitHubService::class.java)
         val basicAuthString: String = intent.extras.getString("authString", "noAuthStringKey")
 
-        val otp = find<EditText>(R.id.otp)
-        find<Button>(R.id.sign_in_btn).apply {
+        val signInBtn = find<Button>(R.id.sign_in_btn)
+        val otp = find<EditText>(R.id.otp).apply {
+            createNotBlankObservable()!!
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeWith {
+                        onNext {
+                            signInBtn.isEnabled = it
+                        }
+                    }
+        }
+
+        signInBtn.apply {
             setOnClickListener {
                 service
                         .login(basicAuthString, otp.text.toString())
@@ -32,6 +45,5 @@ class OTPActivity : AppCompatActivity() {
                         }
             }
         }
-
     }
 }

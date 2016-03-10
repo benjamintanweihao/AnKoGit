@@ -1,8 +1,10 @@
 package io.benjamintan.ankogit.activities
 
 import android.content.Intent
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import com.natpryce.hamkrest.Matcher
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import io.benjamintan.ankogit.APIServiceTestHelper
@@ -21,6 +23,24 @@ import org.robolectric.shadows.ShadowActivity
 class OTPActivityTest : RobolectricTest() {
 
     val server = MockWebServer()
+    val isEnabled = Matcher(View::isEnabled)
+
+    @Test
+    fun sign_in_button_should_enable_only_when_otp_is_filled() {
+        val intent = Intent().apply { putExtra("authString", "Basic: xxx") }
+        val activity = Robolectric.buildActivity(OTPActivity::class.java).withIntent(intent).create().get().apply {
+            service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
+        }
+
+        val otp = activity.find<EditText>(R.id.otp)
+        val signInButton = activity.find<Button>(R.id.sign_in_btn)
+
+        assertThat(otp.text.toString(), String::isEmpty)
+        assertThat(signInButton, !isEnabled)
+
+        otp.setText("xxxxxx")
+        assertThat(signInButton, isEnabled)
+    }
 
     @Test
     fun successful_sign_in_goes_to_main_screen() {
@@ -28,10 +48,8 @@ class OTPActivityTest : RobolectricTest() {
                 .setResponseCode(200)
                 .setBody(APIServiceTestHelper.body("GET", "user", 200)))
 
-        val basicAuth = "Basic: xxx"
         val otp = "123456"
-        val intent = Intent().apply { putExtra("authString", basicAuth) }
-
+        val intent = Intent().apply { putExtra("authString", "Basic: xxx") }
         val activity = Robolectric.buildActivity(OTPActivity::class.java).withIntent(intent).create().get().apply {
             service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
         }
@@ -48,10 +66,9 @@ class OTPActivityTest : RobolectricTest() {
 
     @Test
     fun basic_auth_string_and_otp_passed_into_service() {
-        val basicAuth = "Basic: xxx"
+        val basicAuth = "Basic: xxxxxx"
         val otp = "123456"
         val intent = Intent().apply { putExtra("authString", basicAuth) }
-
         val activity = Robolectric.buildActivity(OTPActivity::class.java).withIntent(intent).create().get().apply {
             service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
         }

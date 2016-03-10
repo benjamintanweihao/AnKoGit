@@ -5,11 +5,11 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Base64
 import android.widget.Button
 import android.widget.EditText
-import com.jakewharton.rxbinding.widget.RxTextView
 import io.benjamintan.ankogit.App
 import io.benjamintan.ankogit.R
 import io.benjamintan.ankogit.data.api.GitHubService
 import io.benjamintan.ankogit.data.api.ServiceGenerator
+import io.benjamintan.ankogit.utils.createNotBlankObservable
 import org.jetbrains.anko.find
 import org.jetbrains.anko.startActivity
 import rx.Observable
@@ -36,8 +36,8 @@ class LoginActivity : AppCompatActivity() {
 
         val login = find<EditText>(R.id.login)
         val password = find<EditText>(R.id.password)
-        val loginNotBlankObs = notBlankObservable(login)
-        val passwordNotBlankObs = notBlankObservable(password)
+        val loginNotBlankObs = login.createNotBlankObservable()
+        val passwordNotBlankObs = password.createNotBlankObservable()
 
         val signInBtn = find<Button>(R.id.sign_in_btn).apply {
             isEnabled = false
@@ -72,13 +72,6 @@ class LoginActivity : AppCompatActivity() {
                         startActivity<OTPActivity>("authString" to authStr)
                     }
                 }
-    }
-
-    private fun notBlankObservable(login: EditText): Observable<Boolean>? {
-        val loginNotBlank: Observable<Boolean>? = RxTextView
-                .textChangeEvents(login)
-                .map { it.text().isNotBlank() }
-        return loginNotBlank
     }
 }
 
