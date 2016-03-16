@@ -47,12 +47,16 @@ class OTPActivity : AppCompatActivity() {
         signInBtn.apply {
             setOnClickListener {
                 service
-                        .login(basicAuthString, otp.text.toString())
+                        .getOrCreateAuthorization(basicAuthString, otp = otp.text.toString())
                         .subscribeOn(schedulerIO)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith {
-                            onNext { startActivity<MainActivity>() }
-                            onError { toast(it.getStackTraceString()) }
+                            onNext {
+                                startActivity<MainActivity>("hashedToken" to it.hashed_token)
+                            }
+                            onError {
+                                toast(it.getStackTraceString())
+                            }
                         }
             }
         }

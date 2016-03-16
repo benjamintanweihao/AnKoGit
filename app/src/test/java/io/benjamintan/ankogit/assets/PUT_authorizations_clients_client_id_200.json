@@ -1,0 +1,20 @@
+{
+  "id": 29365936,
+  "url": "https://api.github.com/authorizations/29365936",
+  "app": {
+    "name": "AnKoGit",
+    "url": "http://benjamintan.io",
+    "client_id": "f7d35391104c7046d3c7"
+  },
+  "token": "",
+  "hashed_token": "17f2ee21eb704e59f5a4eaff2dce637a7d497fdbba59f466c736f067c8bef29c",
+  "token_last_eight": "7c57fb75",
+  "note": null,
+  "note_url": null,
+  "created_at": "2016-03-15T01:01:49Z",
+  "updated_at": "2016-03-15T01:01:49Z",
+  "scopes": [
+    "repo"
+  ],
+  "fingerprint": null
+}

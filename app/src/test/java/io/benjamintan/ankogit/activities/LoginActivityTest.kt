@@ -51,7 +51,7 @@ class LoginActivityTest : RobolectricTest() {
     fun sign_in_successful() {
         server.enqueue(MockResponse()
                 .setResponseCode(200)
-                .setBody(APIServiceTestHelper.body("GET", "user", 200)))
+                .setBody(APIServiceTestHelper.body("PUT", "authorizations_clients_client_id", 200)))
 
         val activity = Robolectric.setupActivity(LoginActivity::class.java).apply {
             service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
