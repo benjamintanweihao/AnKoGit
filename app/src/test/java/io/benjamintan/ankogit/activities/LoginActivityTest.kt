@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import com.natpryce.hamkrest.Matcher
 import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.containsSubstring
 import com.natpryce.hamkrest.equalTo
 import io.benjamintan.ankogit.APIServiceTestHelper
 import io.benjamintan.ankogit.R
@@ -17,11 +18,10 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.jetbrains.anko.find
 import org.junit.Test
-import org.mockito.Mockito.*
 import org.robolectric.Robolectric
-import org.robolectric.Shadows.*
 import org.robolectric.internal.ShadowExtractor
 import org.robolectric.shadows.ShadowActivity
+import org.robolectric.shadows.ShadowToast
 import rx.schedulers.Schedulers
 
 class LoginActivityTest : RobolectricTest() {
@@ -100,6 +100,26 @@ class LoginActivityTest : RobolectricTest() {
         assertThat(actualIntent.component.className, equalTo(OTPActivity::class.qualifiedName));
         assert(actualIntent.hasExtra("authString"))
         assertThat(actualIntent.extras.getString("authString"), equalTo(encodedAuthStr))
+    }
+
+    @Test
+    fun sign_in_unsuccessful_wrong_password() {
+        val responseCode = 401
+
+        server.enqueue(MockResponse()
+                .setResponseCode(responseCode)
+                .setBody(APIServiceTestHelper.body("PUT", "authorizations_clients_client_id", responseCode)))
+
+        val activity = Robolectric.setupActivity(LoginActivity::class.java).apply {
+            service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
+            schedulerIO = Schedulers.immediate()
+        }
+
+        activity.find<EditText>(R.id.login).apply { setText("anything") }
+        activity.find<EditText>(R.id.password).apply { setText("anything") }
+        activity.find<Button>(R.id.sign_in_btn).apply { performClick() }
+
+        assertThat(ShadowToast.getTextOfLatestToast(), containsSubstring("Invalid username or password"))
     }
 }
 
