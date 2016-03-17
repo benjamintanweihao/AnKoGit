@@ -14,7 +14,7 @@ NOTE: This is a work in progress. In other words, nothing much to see here for n
 
 ## TODO
 
-- [ ] Login
+- [X] Login
 - [ ] News
 - [ ] Repositories List
 - [ ] Followers List
