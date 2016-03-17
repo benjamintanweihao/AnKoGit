@@ -4,6 +4,7 @@ import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.json.JSONObject
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 import rx.Observable
 
@@ -24,13 +25,13 @@ interface GitHubService {
     @PUT("authorizations/clients/{client_id}")
     fun getOrCreateAuthorization(@Header("Authorization") authorization: String,
                                  @Path("client_id") clientId: String = clientId(),
-                                 @Body body: RequestBody = defaultRequestBody()): Observable<Authorization>
+                                 @Body body: RequestBody = defaultRequestBody()): Observable<Response<Authorization>>
 
     @PUT("authorizations/clients/{client_id}")
     fun getOrCreateAuthorization(@Header("Authorization") authorization: String,
                                  @Header("X-GitHub-OTP") otp: String,
                                  @Path("client_id") clientId: String = clientId(),
-                                 @Body body: RequestBody = defaultRequestBody()): Observable<Authorization>
+                                 @Body body: RequestBody = defaultRequestBody()): Observable<Response<Authorization>>
 
     private fun defaultRequestBody(): RequestBody {
         val mediaType = MediaType.parse("application/json");

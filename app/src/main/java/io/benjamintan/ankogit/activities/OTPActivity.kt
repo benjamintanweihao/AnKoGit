@@ -52,7 +52,7 @@ class OTPActivity : AppCompatActivity() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith {
                             onNext {
-                                startActivity<MainActivity>("hashedToken" to it.hashed_token)
+                                startActivity<MainActivity>("hashedToken" to it.body().hashed_token)
                             }
                             onError {
                                 toast(it.getStackTraceString())

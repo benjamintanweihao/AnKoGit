@@ -9,6 +9,7 @@ import android.view.View
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import io.benjamintan.ankogit.App
 import io.benjamintan.ankogit.R
 import org.jetbrains.anko.find
 
@@ -17,6 +18,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        (application as App).component(this).inject(this)
 
         val hashedToken: String = intent.extras.getString("hashedToken", "noHashToken")
 

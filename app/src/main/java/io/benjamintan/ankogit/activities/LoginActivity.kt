@@ -11,7 +11,9 @@ import io.benjamintan.ankogit.data.api.GitHubService
 import io.benjamintan.ankogit.data.api.ServiceGenerator
 import io.benjamintan.ankogit.utils.createNotBlankObservable
 import org.jetbrains.anko.find
+import org.jetbrains.anko.getStackTraceString
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 import rx.Observable
 import rx.Scheduler
 import rx.android.schedulers.AndroidSchedulers
@@ -66,10 +68,18 @@ class LoginActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith {
                     onNext {
-                        startActivity<MainActivity>()
+                        when(it.code()) {
+                            201 -> startActivity<MainActivity>()
+                            401 ->
+                                if(!it.headers().get("X-GitHub-OTP").isNullOrEmpty()) {
+                                    startActivity<OTPActivity>("authString" to encodedAuthStr)
+                                } else {
+                                    toast(text = "Invalid username or password.")
+                                }
+                        }
                     }
                     onError {
-                        startActivity<OTPActivity>("authString" to encodedAuthStr)
+                        toast(it.getStackTraceString())
                     }
                 }
     }
