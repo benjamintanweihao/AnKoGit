@@ -23,3 +23,6 @@ NOTE: This is a work in progress. In other words, nothing much to see here for n
 - [ ] Issues
 - [ ] Code Navigation
 
+## Instructions
+
+Set up a GitHub application and add the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` environment variables respectively.

@@ -49,9 +49,11 @@ class LoginActivityTest : RobolectricTest() {
 
     @Test
     fun sign_in_successful() {
+        val responseCode = 201
+
         server.enqueue(MockResponse()
-                .setResponseCode(200)
-                .setBody(APIServiceTestHelper.body("PUT", "authorizations_clients_client_id", 200)))
+                .setResponseCode(responseCode)
+                .setBody(APIServiceTestHelper.body("PUT", "authorizations_clients_client_id", responseCode)))
 
         val activity = Robolectric.setupActivity(LoginActivity::class.java).apply {
             service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
@@ -75,8 +77,8 @@ class LoginActivityTest : RobolectricTest() {
 
         server.enqueue(MockResponse()
                 .setResponseCode(responseCode)
-                .setHeader("X-GitHub-OTP", "required; :2fa-type")
-                .setBody(APIServiceTestHelper.body("GET", "user", responseCode)))
+                .setHeader("X-GitHub-OTP", "anything")
+                .setBody(APIServiceTestHelper.body("PUT", "authorizations_clients_client_id", responseCode)))
 
         val activity = Robolectric.setupActivity(LoginActivity::class.java).apply {
             service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())

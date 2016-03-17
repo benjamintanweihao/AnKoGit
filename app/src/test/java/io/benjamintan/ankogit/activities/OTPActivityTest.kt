@@ -45,9 +45,12 @@ class OTPActivityTest : RobolectricTest() {
 
     @Test
     fun successful_sign_in_goes_to_main_screen() {
+        val responseCode = 201
+
         server.enqueue(MockResponse()
-                .setResponseCode(200)
-                .setBody(APIServiceTestHelper.body("GET", "user", 200)))
+                .setResponseCode(responseCode)
+                .setHeader("X-GitHub-OTP", "required; :2fa-type")
+                .setBody(APIServiceTestHelper.body("PUT", "authorizations_clients_client_id", responseCode)))
 
         val otp = "123456"
         val intent = Intent().apply { putExtra("authString", "Basic: xxx") }
