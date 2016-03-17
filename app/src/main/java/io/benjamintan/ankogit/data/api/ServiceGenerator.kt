@@ -8,7 +8,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ServiceGenerator {
 
-    // TODO: Dependency inject all the things
     val url = "https://api.github.com/"
 
     fun <T> create(serviceClass: Class<T>, baseUrl: String = url): T {
