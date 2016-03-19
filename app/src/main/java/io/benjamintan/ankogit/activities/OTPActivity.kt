@@ -7,7 +7,6 @@ import android.widget.EditText
 import io.benjamintan.ankogit.App
 import io.benjamintan.ankogit.R
 import io.benjamintan.ankogit.data.api.GitHubService
-import io.benjamintan.ankogit.data.api.ServiceGenerator
 import io.benjamintan.ankogit.utils.createNotBlankObservable
 import org.jetbrains.anko.*
 import rx.Scheduler
@@ -29,7 +28,6 @@ class OTPActivity : AppCompatActivity() {
 
         (application as App).component(this).inject(this)
 
-        service = ServiceGenerator.create(GitHubService::class.java)
         val basicAuthString: String = intent.extras.getString("authString", "noAuthStringKey")
 
         val signInBtn = find<Button>(R.id.sign_in_btn)

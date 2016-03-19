@@ -8,7 +8,9 @@ import io.benjamintan.ankogit.activities.OTPActivity
 import javax.inject.Singleton
 
 @Component(
-        modules = arrayOf(AppModule::class)
+        modules = arrayOf(
+                AppModule::class,
+                ServiceModule::class)
 )
 @Singleton
 interface AppComponent {

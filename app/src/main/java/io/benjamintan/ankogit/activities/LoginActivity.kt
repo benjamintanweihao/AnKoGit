@@ -34,8 +34,6 @@ class LoginActivity : AppCompatActivity() {
 
         (application as App).component(this).inject(this)
 
-        service = ServiceGenerator.create(GitHubService::class.java)
-
         val login = find<EditText>(R.id.login)
         val password = find<EditText>(R.id.password)
         val loginNotBlankObs = login.createNotBlankObservable()
