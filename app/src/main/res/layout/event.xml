@@ -1,0 +1,38 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        android:background="@android:color/black" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@+id/icon"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/who_and_action"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Sample Text" />
+
+        <TextView
+            android:id="@+id/repo_and_when"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:text="Sample Text" />
+
+    </LinearLayout>
+
+</RelativeLayout>
