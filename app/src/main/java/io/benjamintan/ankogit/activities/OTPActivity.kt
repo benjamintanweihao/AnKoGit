@@ -20,6 +20,7 @@ class OTPActivity : AppCompatActivity() {
     @field:[Inject Named("io")]
     lateinit var schedulerIO: Scheduler
 
+    @Inject
     lateinit var service: GitHubService
 
     override fun onCreate(savedInstanceState: Bundle?) {

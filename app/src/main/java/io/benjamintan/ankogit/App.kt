@@ -5,6 +5,7 @@ import android.content.Context
 import io.benjamintan.ankogit.di.AppComponent
 import io.benjamintan.ankogit.di.AppModule
 import io.benjamintan.ankogit.di.DaggerAppComponent
+import io.benjamintan.ankogit.di.ServiceModule
 
 class App : Application() {
 
@@ -15,6 +16,7 @@ class App : Application() {
         component = DaggerAppComponent
                 .builder()
                 .appModule(AppModule(this))
+                .serviceModule(ServiceModule())
                 .build()
     }
 

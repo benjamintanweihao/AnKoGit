@@ -30,7 +30,7 @@
             android:id="@+id/repo_and_when"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
+            android:paddingTop="4dp"
             android:text="Sample Text" />
 
     </LinearLayout>
