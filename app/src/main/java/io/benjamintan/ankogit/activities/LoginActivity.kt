@@ -8,7 +8,6 @@ import android.widget.EditText
 import io.benjamintan.ankogit.App
 import io.benjamintan.ankogit.R
 import io.benjamintan.ankogit.data.api.GitHubService
-import io.benjamintan.ankogit.data.api.ServiceGenerator
 import io.benjamintan.ankogit.utils.createNotBlankObservable
 import okhttp3.RequestBody
 import org.jetbrains.anko.find
