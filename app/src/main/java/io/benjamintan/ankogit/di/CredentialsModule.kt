@@ -7,8 +7,10 @@ import java.util.*
 import javax.inject.Named
 import javax.inject.Singleton
 import io.benjamintan.ankogit.R
+import io.benjamintan.ankogit.data.api.GitHubAuth
 import okhttp3.MediaType
 import okhttp3.RequestBody
+import org.json.JSONObject
 
 @Module
 class CredentialsModule {
@@ -40,10 +42,9 @@ class CredentialsModule {
 
     @Provides
     @Singleton
-    @Named("githubRequestBody")
-    fun githubRequestBody(@Named("githubClientSecret") clientSecret: String): RequestBody {
-        val mediaType = MediaType.parse("application/json");
-        return RequestBody.create(mediaType, "{\"scopes\":[\"repo\"], \"client_secret\": \"$clientSecret\" }");
+    @Named("githubAuthBody")
+    fun githubAuthJSONBody(@Named("githubClientId") clientId: String, @Named("githubClientSecret") clientSecret: String): GitHubAuth {
+        return GitHubAuth(clientId, clientSecret)
     }
 }
 
