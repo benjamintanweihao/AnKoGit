@@ -8,6 +8,7 @@ import io.benjamintan.ankogit.App
 import io.benjamintan.ankogit.R
 import io.benjamintan.ankogit.data.api.GitHubService
 import io.benjamintan.ankogit.utils.createNotBlankObservable
+import okhttp3.RequestBody
 import org.jetbrains.anko.*
 import rx.Scheduler
 import rx.android.schedulers.AndroidSchedulers
@@ -22,6 +23,12 @@ class OTPActivity : AppCompatActivity() {
 
     @Inject
     lateinit var service: GitHubService
+
+    @field:[Inject Named("githubClientId")]
+    lateinit var clientId: String
+
+    @field:[Inject Named("githubRequestBody")]
+    lateinit var requestBody: RequestBody
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +53,7 @@ class OTPActivity : AppCompatActivity() {
         signInBtn.apply {
             setOnClickListener {
                 service
-                        .getOrCreateAuthorization(basicAuthString, otp = otp.text.toString())
+                        .getOrCreateAuthorization(basicAuthString, otp.text.toString(), clientId, requestBody)
                         .subscribeOn(schedulerIO)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith {

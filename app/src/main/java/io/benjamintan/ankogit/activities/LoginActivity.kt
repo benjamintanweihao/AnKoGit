@@ -10,6 +10,7 @@ import io.benjamintan.ankogit.R
 import io.benjamintan.ankogit.data.api.GitHubService
 import io.benjamintan.ankogit.data.api.ServiceGenerator
 import io.benjamintan.ankogit.utils.createNotBlankObservable
+import okhttp3.RequestBody
 import org.jetbrains.anko.find
 import org.jetbrains.anko.getStackTraceString
 import org.jetbrains.anko.startActivity
@@ -28,6 +29,12 @@ class LoginActivity : AppCompatActivity() {
 
     @Inject
     lateinit var service: GitHubService
+
+    @field:[Inject Named("githubClientId")]
+    lateinit var clientId: String
+
+    @field:[Inject Named("githubRequestBody")]
+    lateinit var requestBody: RequestBody
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
         val authStr = "$login:$password"
         val encodedAuthStr = "Basic ${Base64.encodeToString(authStr.toByteArray(), Base64.NO_WRAP)}"
 
-        service.getOrCreateAuthorization(encodedAuthStr)
+        service.getOrCreateAuthorization(encodedAuthStr, clientId, requestBody)
                 .subscribeOn(schedulerIO)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith {
