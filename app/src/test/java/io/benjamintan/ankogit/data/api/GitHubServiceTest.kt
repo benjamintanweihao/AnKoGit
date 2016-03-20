@@ -119,38 +119,5 @@ class GitHubServiceTest : RobolectricTest() {
                     onError { println(it.message) }
                 }
     }
-
-    @Test
-    fun test_POST_authorizations_201() {
-        val responseCode = 201
-
-        server.enqueue(MockResponse()
-                .setResponseCode(responseCode)
-                .setBody(APIServiceTestHelper.body("POST", "authorizations", responseCode)))
-
-        val json = JSONObject()
-        json.put("note", "a note")
-
-        service.authorizations(json)
-                .subscribeWith {
-                    onNext { println(it) }
-                    onError { println(it.message) }
-                }
-    }
-
-    @Test
-    fun test_POST_authorizations_422() {
-        val responseCode = 422
-
-        server.enqueue(MockResponse()
-                .setResponseCode(responseCode)
-                .setBody(APIServiceTestHelper.body("POST", "authorizations", responseCode)))
-
-        service.authorizations(JSONObject())
-                .subscribeWith {
-                    onNext { println(it) }
-                    onError { println(it.message) }
-                }
-    }
 }
 

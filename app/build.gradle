@@ -51,6 +51,8 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:${retrofit_version}"
     compile "com.squareup.retrofit2:adapter-rxjava:${retrofit_version}"
 
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
     testCompile 'junit:junit:4.12'
     testCompile 'com.natpryce:hamkrest:1.1.0.0'
     testCompile 'org.robolectric:robolectric:3.0'

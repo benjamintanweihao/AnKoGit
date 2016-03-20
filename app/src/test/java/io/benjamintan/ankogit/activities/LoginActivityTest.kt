@@ -1,5 +1,6 @@
 package io.benjamintan.ankogit.activities
 
+import android.content.Context
 import android.content.Intent
 import android.util.Base64
 import android.view.View
@@ -9,9 +10,8 @@ import com.natpryce.hamkrest.Matcher
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.containsSubstring
 import com.natpryce.hamkrest.equalTo
-import io.benjamintan.ankogit.APIServiceTestHelper
-import io.benjamintan.ankogit.R
-import io.benjamintan.ankogit.RobolectricTest
+import com.natpryce.hamkrest.isEmptyString
+import io.benjamintan.ankogit.*
 import io.benjamintan.ankogit.data.api.GitHubService
 import io.benjamintan.ankogit.data.api.ServiceGenerator
 import okhttp3.mockwebserver.MockResponse
@@ -120,6 +120,74 @@ class LoginActivityTest : RobolectricTest() {
         activity.find<Button>(R.id.sign_in_btn).apply { performClick() }
 
         assertThat(ShadowToast.getTextOfLatestToast(), containsSubstring("Invalid username or password"))
+    }
+
+    @Test
+    fun successful_sign_in_stores_username_and_token_into_shared_preferences() {
+        val responseCode = 201
+
+        server.enqueue(MockResponse()
+                .setResponseCode(responseCode)
+                .setBody(APIServiceTestHelper.body("PUT", "authorizations_clients_client_id", responseCode)))
+
+        val activity = Robolectric.setupActivity(LoginActivity::class.java).apply {
+            service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
+            schedulerIO = Schedulers.immediate()
+            sharedPreferences = context().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+        }
+
+        activity.find<EditText>(R.id.login).apply { setText("username") }
+        activity.find<EditText>(R.id.password).apply { setText("password") }
+        activity.find<Button>(R.id.sign_in_btn).apply { performClick() }
+
+        assertThat(activity.sharedPreferences.getString(USERNAME, ""), equalTo("username"))
+        assertThat(activity.sharedPreferences.getString(TOKEN, ""), !isEmptyString)
+    }
+
+    @Test
+    fun unsuccessful_sign_in_that_requires_otp_should_store_username_into_shared_preferences() {
+        val responseCode = 401
+
+        server.enqueue(MockResponse()
+                .setResponseCode(responseCode)
+                .setHeader("X-GitHub-OTP", "anything")
+                .setBody(APIServiceTestHelper.body("PUT", "authorizations_clients_client_id", responseCode)))
+
+        val activity = Robolectric.setupActivity(LoginActivity::class.java).apply {
+            service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
+            schedulerIO = Schedulers.immediate()
+            sharedPreferences = context().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+        }
+
+        val login = "username"
+        val password = "password"
+
+        activity.find<EditText>(R.id.login).apply { setText(login) }
+        activity.find<EditText>(R.id.password).apply { setText(password) }
+        activity.find<Button>(R.id.sign_in_btn).apply { performClick() }
+
+        assertThat(activity.sharedPreferences.getString(USERNAME, ""), equalTo(login))
+    }
+
+    @Test
+    fun unsuccessful_sign_in_due_to_wrong_password_should_not_store_username() {
+        val responseCode = 401
+
+        server.enqueue(MockResponse()
+                .setResponseCode(responseCode)
+                .setBody(APIServiceTestHelper.body("PUT", "authorizations_clients_client_id", responseCode)))
+
+        val activity = Robolectric.setupActivity(LoginActivity::class.java).apply {
+            service = ServiceGenerator.create(GitHubService::class.java, server.url("").toString())
+            schedulerIO = Schedulers.immediate()
+            sharedPreferences = context().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+        }
+
+        activity.find<EditText>(R.id.login).apply { setText("anything") }
+        activity.find<EditText>(R.id.password).apply { setText("anything") }
+        activity.find<Button>(R.id.sign_in_btn).apply { performClick() }
+
+        assertThat(activity.sharedPreferences.getString(USERNAME, ""), isEmptyString)
     }
 }
 

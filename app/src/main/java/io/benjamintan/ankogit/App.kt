@@ -2,9 +2,7 @@ package io.benjamintan.ankogit
 
 import android.app.Application
 import android.content.Context
-import io.benjamintan.ankogit.di.AppComponent
-import io.benjamintan.ankogit.di.AppModule
-import io.benjamintan.ankogit.di.DaggerAppComponent
+import io.benjamintan.ankogit.di.*
 
 class App : Application() {
 
@@ -15,6 +13,8 @@ class App : Application() {
         component = DaggerAppComponent
                 .builder()
                 .appModule(AppModule(this))
+                .credentialsModule(CredentialsModule())
+                .serviceModule(ServiceModule())
                 .build()
     }
 

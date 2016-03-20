@@ -1,5 +1,6 @@
 package io.benjamintan.ankogit.activities
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Base64
@@ -7,8 +8,10 @@ import android.widget.Button
 import android.widget.EditText
 import io.benjamintan.ankogit.App
 import io.benjamintan.ankogit.R
+import io.benjamintan.ankogit.TOKEN
+import io.benjamintan.ankogit.USERNAME
+import io.benjamintan.ankogit.data.api.GitHubAuth
 import io.benjamintan.ankogit.data.api.GitHubService
-import io.benjamintan.ankogit.data.api.ServiceGenerator
 import io.benjamintan.ankogit.utils.createNotBlankObservable
 import org.jetbrains.anko.find
 import org.jetbrains.anko.getStackTraceString
@@ -26,15 +29,23 @@ class LoginActivity : AppCompatActivity() {
     @field:[Inject Named("io")]
     lateinit var schedulerIO: Scheduler
 
+    @Inject
     lateinit var service: GitHubService
+
+    @field:[Inject Named("githubClientId")]
+    lateinit var clientId: String
+
+    @field:[Inject Named("githubAuthBody")]
+    lateinit var authBody: GitHubAuth
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         (application as App).component(this).inject(this)
-
-        service = ServiceGenerator.create(GitHubService::class.java)
 
         val login = find<EditText>(R.id.login)
         val password = find<EditText>(R.id.password)
@@ -63,15 +74,28 @@ class LoginActivity : AppCompatActivity() {
         val authStr = "$login:$password"
         val encodedAuthStr = "Basic ${Base64.encodeToString(authStr.toByteArray(), Base64.NO_WRAP)}"
 
-        service.getOrCreateAuthorization(encodedAuthStr)
+        service.createAuthorization(encodedAuthStr, authBody)
                 .subscribeOn(schedulerIO)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith {
                     onNext {
-                        when(it.code()) {
-                            201 -> startActivity<MainActivity>()
+                        when (it.code()) {
+                            201 -> {
+                                sharedPreferences
+                                        .edit()
+                                        .putString(USERNAME, login)
+                                        .putString(TOKEN, "token ${it.body().token}")
+                                        .commit()
+
+                                startActivity<MainActivity>()
+                            }
                             401 ->
-                                if(!it.headers().get("X-GitHub-OTP").isNullOrEmpty()) {
+                                if (!it.headers().get("X-GitHub-OTP").isNullOrEmpty()) {
+                                    sharedPreferences
+                                            .edit()
+                                            .putString(USERNAME, login)
+                                            .commit()
+
                                     startActivity<OTPActivity>("authString" to encodedAuthStr)
                                 } else {
                                     toast(text = "Invalid username or password.")

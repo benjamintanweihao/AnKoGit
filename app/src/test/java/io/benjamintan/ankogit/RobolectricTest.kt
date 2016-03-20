@@ -14,7 +14,7 @@ import org.robolectric.shadows.ShadowLog
 @Ignore open class RobolectricTest {
 
     @Before
-    fun setup() {
+    open fun setup() {
         ShadowLog.stream = System.out;
     }
 

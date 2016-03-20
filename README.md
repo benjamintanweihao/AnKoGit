@@ -25,4 +25,5 @@ NOTE: This is a work in progress. In other words, nothing much to see here for n
 
 ## Instructions
 
-Set up a GitHub application and add the `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` environment variables respectively.
+Edit the `config.properties.sample` file and fill in with the respective GitHub client id and client secret.
+
