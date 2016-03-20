@@ -15,12 +15,11 @@ NOTE: This is a work in progress. In other words, nothing much to see here for n
 ## TODO
 
 - [X] Login
-- [ ] News
+- [X] News
 - [ ] Repositories List
 - [ ] Followers List
 - [ ] Following List
 - [ ] Search
-- [ ] Issues
 - [ ] Code Navigation
 
 ## Instructions
