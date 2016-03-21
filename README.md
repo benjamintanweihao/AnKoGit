@@ -1,6 +1,6 @@
 # AnKoGit – An Android GitHub Client written in Kotlin
 
-NOTE: This is a work in progress. In other words, nothing much to see here for now.
+![](http://i.imgur.com/wkCZNvM.jpg)
 
 ## Libraries used
 
@@ -10,7 +10,6 @@ NOTE: This is a work in progress. In other words, nothing much to see here for n
 * RxJava
 * Robolectric
 * Mockito
-* Espresso
 
 ## TODO
 
